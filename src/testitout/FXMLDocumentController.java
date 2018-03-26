@@ -20,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.*;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
+import javafx.scene.layout.Background;
 import javafx.scene.shape.ArcType;
 import testitout.model.*;
 
@@ -127,52 +128,17 @@ public class FXMLDocumentController implements Initializable {
     private ButtonBar menuButtonBar;
     @FXML
     private Button menuButton;
+    private GraphicsContext gcBack, gc;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //menuButtonBar.toFront();
-        GraphicsContext gcBack = mapCanvas.getGraphicsContext2D();
-        File canvasBackground = new File ("src/testitout/images/canvasBkg.jpg");
-        Image canvasBackgroundImage = new Image(canvasBackground.toURI().toString()); 
-        
-        GraphicsContext gc = drawCanvas.getGraphicsContext2D();
-        drawShapes(gc);
-        gcBack.drawImage(canvasBackgroundImage, 0, 0);
         mc = new MainCharacter();
+        createMenu();
+        createStation();
+        createMap();
         //charNameTab.setText(mc.getName());
-            
-        //Setup Factory Home Information
-        fac = mc.getFactory();
-        factoryAvailSteelText.setText(Integer.toString(fac.getInStockSteel()));
-        factoryAvailAlumText.setText(Integer.toString(fac.getInStockAlum()));
-        factoryAvailFuelText.setText(Integer.toString(fac.getInStockFuel()));
-        availBaysText.setText(Integer.toString(fac.getAvailBays()));
-        baysInUseText.setText(Integer.toString( (fac.getTotalBays()) - fac.getAvailBays() ));
-        totalBaysText.setText(Integer.toString(fac.getTotalBays()));
-        
-        //Setup "Build a Drone" Information
-        droneStockSteelText.setText(Integer.toString(fac.getInStockSteel()));
-        droneStockAluminumText.setText(Integer.toString(fac.getInStockAlum()));
-        droneStockFuelText.setText(Integer.toString(fac.getInStockFuel()));
-        droneReqSteelText.setText("25");
-        droneReqAluminumText.setText("25");
-        droneReqFuelText.setText("25");
-        droneTypeBox.setItems(FXCollections.observableArrayList(
-            "Scout", "Mining", "Party")
-        );
-        droneTypeBox.getSelectionModel().selectFirst();
-        
-        //Setup the Hanger
-        //droneInfo = FXCollections.observableArrayList();
-        droneList = mc.getDroneList();
-        int count = 1;
-        for (Drone x : droneList) {
-            if (count == 1) {
-                gridNameTextBay1.setText(x.getName());
-            }
-            count++;
-        }
-        //droneInfoList.setItems(FXCollections.observableArrayList(droneInfo));
+
+
     }    
     
     @FXML
@@ -213,7 +179,6 @@ public class FXMLDocumentController implements Initializable {
         } else {
                 droneBuildResultLabel.setText("Insuffient Resources or Number of Bays");
         }
-
     }
     
     private void handleShipBuildAction (ActionEvent event) {
@@ -223,11 +188,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleStationButtonAction(ActionEvent event) {
         mainTab.toFront();
-        
-        
         menuButtonBar.toFront();
-        
-        
     }
 
     @FXML
@@ -235,14 +196,13 @@ public class FXMLDocumentController implements Initializable {
         mapCanvas.toFront();
         drawCanvas.toFront();
         menuButtonBar.toFront();
-        
     }
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
     }
     
-        private void drawShapes(GraphicsContext gc) {
+    private void drawShapes(GraphicsContext gc) {
         gc.setFill(Color.GREEN);
         gc.setStroke(Color.BLUE);
         gc.setLineWidth(5);
@@ -267,5 +227,56 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void handleMenuButtonAction(ActionEvent event) {
+    }
+
+    private void createMenu() {
+        
+    }
+
+    private void createStation() {
+        //Setup Factory Home Information
+        fac = mc.getFactory();
+        mainTab.setStyle("-fx-background-color: grey;");
+        factoryAvailSteelText.setText(Integer.toString(fac.getInStockSteel()));
+        factoryAvailAlumText.setText(Integer.toString(fac.getInStockAlum()));
+        factoryAvailFuelText.setText(Integer.toString(fac.getInStockFuel()));
+        availBaysText.setText(Integer.toString(fac.getAvailBays()));
+        baysInUseText.setText(Integer.toString( (fac.getTotalBays()) - fac.getAvailBays() ));
+        totalBaysText.setText(Integer.toString(fac.getTotalBays()));
+        
+        //Setup "Build a Drone" Information
+        droneStockSteelText.setText(Integer.toString(fac.getInStockSteel()));
+        droneStockAluminumText.setText(Integer.toString(fac.getInStockAlum()));
+        droneStockFuelText.setText(Integer.toString(fac.getInStockFuel()));
+        droneReqSteelText.setText("25");
+        droneReqAluminumText.setText("25");
+        droneReqFuelText.setText("25");
+        droneTypeBox.setItems(FXCollections.observableArrayList(
+            "Scout", "Mining", "Party")
+        );
+        droneTypeBox.getSelectionModel().selectFirst();
+        
+        //Setup the Hanger
+        //droneInfo = FXCollections.observableArrayList();
+        droneList = mc.getDroneList();
+        int count = 1;
+        for (Drone x : droneList) {
+            if (count == 1) {
+                gridNameTextBay1.setText(x.getName());
+            }
+            count++;
+        }
+        //droneInfoList.setItems(FXCollections.observableArrayList(droneInfo));
+    }
+
+    private void createMap() {
+        gcBack = mapCanvas.getGraphicsContext2D();
+        //gcBack.setFill(Color.BLUE);
+        File canvasBackground = new File ("src/testitout/images/canvasBkg.jpg");
+        Image canvasBackgroundImage = new Image(canvasBackground.toURI().toString()); 
+        
+        gc = drawCanvas.getGraphicsContext2D();
+        drawShapes(gc);
+        gcBack.drawImage(canvasBackgroundImage, 0, 0);
     }
 }
