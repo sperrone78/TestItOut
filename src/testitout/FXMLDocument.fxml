@@ -265,7 +265,6 @@
             <Button fx:id="mapButton" mnemonicParsing="false" onAction="#handleMapButtonAction" text="Map" />
             <Button fx:id="menuButton" mnemonicParsing="false" onAction="#handleMenuButtonAction" text="Menu" />
             <Label fx:id="timeLabel" />
-            <Button mnemonicParsing="false" text="Button" />
         </buttons>
       </ButtonBar>
     </children>

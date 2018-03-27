@@ -11,7 +11,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import java.io.File;
 import java.net.URL;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -22,6 +28,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.Background;
 import javafx.scene.shape.ArcType;
+import testitout.helpers.GameClock;
 import testitout.model.*;
 
 /**
@@ -129,16 +136,17 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button menuButton;
     private GraphicsContext gcBack, gc;
+    private long initialGameTime, currentTime;
+    private GameClock gameClock;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         mc = new MainCharacter();
+        createGameClock();
         createMenu();
         createStation();
         createMap();
         //charNameTab.setText(mc.getName());
-
-
     }    
     
     @FXML
@@ -230,7 +238,7 @@ public class FXMLDocumentController implements Initializable {
     }
 
     private void createMenu() {
-        
+        setTime();
     }
 
     private void createStation() {
@@ -278,5 +286,27 @@ public class FXMLDocumentController implements Initializable {
         gc = drawCanvas.getGraphicsContext2D();
         drawShapes(gc);
         gcBack.drawImage(canvasBackgroundImage, 0, 0);
+    }
+
+    private void setTime(){
+        long nanoTime = System.nanoTime();
+        long timeDiff = nanoTime - initialGameTime;
+        double seconds = (double)timeDiff/1000000000.0;
+        timeLabel.setText(String.valueOf(seconds));
+        /*
+        //Clock clock = Clock.system(ZoneId.systemDefault());
+        DateTimeFormatter formatter =
+        DateTimeFormatter.ofLocalizedDateTime( FormatStyle.SHORT )
+                     .withLocale( Locale.US )
+                     .withZone( ZoneId.systemDefault() );  
+        Instant instant = Instant.now();
+        String currentStringTime = formatter.format( instant );
+        timeLabel.setText(currentStringTime);
+        */
+    }
+
+    private void createGameClock() {
+        gameClock = new GameClock();
+        gameClock.Pause();
     }
 }
